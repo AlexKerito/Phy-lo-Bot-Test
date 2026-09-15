@@ -52,4 +52,40 @@ def gen_pass(pass_length):
 
     return password
 
-bot.run('Mi tokencito')
+@bot.command()
+async def roll(ctx, dice: str):
+    """Rolls a dice in NdN format."""
+    try:
+        rolls, limit = map(int, dice.split('d'))
+    except Exception:
+        await ctx.send('Format has to be in NdN!')
+        return
+
+    result = ', '.join(str(random.randint(1, limit)) for r in range(rolls))
+    await ctx.send(result)
+
+import os
+
+Images = os.listdir('Files/Images')
+
+@bot.command()
+async def mem(ctx):
+    with open(f'Files/Images/{Images[random.randint(0, len(Images))-1]}', 'rb') as f:
+            picture = discord.File(f)
+    await ctx.send(file=picture)
+
+import requests
+
+def get_dog_image_url():    
+    url = 'https://api.furry.ist/furry-img/?format=json'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+
+@bot.command('furry')
+async def furry(ctx):
+    image_url = get_dog_image_url()
+    await ctx.send(image_url)
+
+bot.run('TOKEN')
