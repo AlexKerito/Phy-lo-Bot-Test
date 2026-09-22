@@ -88,4 +88,58 @@ async def furry(ctx):
     image_url = get_dog_image_url()
     await ctx.send(image_url)
 
-bot.run('TOKEN')
+import os
+import time
+
+@bot.command('createtxt')
+async def createtxt(ctx, Name, text):
+    TempFile = f'Files/Temp/{Name+".txt"}'
+    File = open(TempFile, 'w', encoding='utf-8')
+    File.write(text)
+
+    await ctx.send(Name+text)
+
+    await ctx.send(file=discord.File(TempFile))
+        
+@bot.command('CalculateBlock')
+async def CalculateBlock(ctx, Volume):
+    await ctx.send("La cantidad de bloques q puedes crear con "+str(Volume)+"m3 son: "+str(int(Volume)/9))
+
+Desafios = {
+    1: "Reciclar 10 botellas de plástico",
+    2: "No uses de botellas de plástico innecesariamente",
+    3: "Encontrar 3 botellas de plástico tiradas",
+    4: "Haz una manualidad usando botellas de plástico!",
+    5: "Empezar a usar bolsas biodegradables",
+    6: "Convertir una botella en una maceta",
+    7: "Crea una hoja de papel usando materiales naturales"
+}
+
+@bot.command("Reto")
+async def Reto(ctx):
+    global Desafios
+    Seleccionado = Desafios[random.randint(1, 7)]
+
+    await ctx.send("Tu desafío de hoy dia es: "+Seleccionado)
+
+def get_pollution_image():
+    url = "https://api.openverse.org/v1/images/"
+
+    params = {
+        "q": "pollution landscape",
+        "page_size": 20
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    image = random.choice(data["results"])
+
+    return image["url"]
+
+@bot.command("contaminacion")
+async def contaminacion(ctx):
+    image_url = get_pollution_image()
+    await ctx.send(image_url)
+
+bot.run('TOKEN AQUI')
